@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
 from .models import RoleChoices
-
+from rest_framework.decorators import action
 
 class UserRegister(APIView):
     permission_classes = [AllowAny]
@@ -20,18 +20,19 @@ class UserRegister(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(APIView):
     permission_classes = [IsAuthenticated]
-    def get_queryset(self):
-        return User.objects.filter(id=self.request.user.id)
+
     def get(self, request, format=None):
         serializer = UserSerializer(request.user)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def get_serializer_class(self):
-        if self.action in ['create', 'update']:
-            return UserCreateSerializer
-        return UserSerializer
-    def update(self, request, *args, **kwargs):
-        return super().update(request, *args, **kwargs)
+    def patch(self, request, format=None):
+        serializer = UserSerializer(request.user, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    def delete(self, request, format=None):
+        request.user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
