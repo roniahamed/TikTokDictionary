@@ -9,7 +9,6 @@ class RoleChoices(models.TextChoices):
 
 
 class User(AbstractUser):
-    email = None 
     role = models.CharField(max_length=50, choices=RoleChoices.choices, blank=True, null=True)
     profile_image = models.ImageField(upload_to='profile_images/', blank=True, null=True)
 

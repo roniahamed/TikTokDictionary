@@ -11,6 +11,7 @@ from .models import RoleChoices
 class UserRegister(APIView):
     permission_classes = [AllowAny]
 
+
     def post(self, request, format=None):
         role = request.data.pop('role', None)
         role = RoleChoices.GENERAL
