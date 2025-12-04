@@ -14,8 +14,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'role', 'password', 'password2']
-        write_only_fields = ['password']
         read_only_fields = ['id']
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'password2': {'write_only': True},
+        }
     
     def validate(self, attrs):
         if attrs['password'] != attrs['password2']:
@@ -32,7 +35,5 @@ class UserCreateSerializer(serializers.ModelSerializer):
             role=validated_data.get('role', 'GENERAL'),
             password=validated_data['password']
         )
-        # user.set_password(validated_data['password'])
-        # user.save()
         return user
 
