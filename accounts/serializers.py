@@ -5,8 +5,8 @@ from rest_framework import serializers
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username','role', 'email', 'first_name', 'last_name', 'profile_image', 'password']
-        read_only_fields = ['id']
+        fields = ['id', 'username','role', 'first_name', 'last_name', 'profile_image']
+        read_only_fields = ['id', 'username', 'role', 'first_name', 'last_name', 'profile_image']
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
