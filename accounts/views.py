@@ -11,7 +11,6 @@ from .models import RoleChoices
 class UserRegister(APIView):
     permission_classes = [AllowAny]
 
-
     def post(self, request, format=None):
         role = request.data.pop('role', None)
         role = RoleChoices.GENERAL
@@ -21,9 +20,18 @@ class UserRegister(APIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-class UserViewSet(APIView):
-    queryset = User.objects.all()
+class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
+    def get_queryset(self):
+        return User.objects.filter(id=self.request.user.id)
     def get(self, request, format=None):
         serializer = UserSerializer(request.user)
         return Response(serializer.data)
+    
+    def get_serializer_class(self):
+        if self.action in ['create', 'update']:
+            return UserCreateSerializer
+        return UserSerializer
+    def update(self, request, *args, **kwargs):
+        return super().update(request, *args, **kwargs)
+    
