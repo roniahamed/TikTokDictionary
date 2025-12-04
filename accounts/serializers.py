@@ -6,7 +6,21 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username','role', 'first_name', 'last_name', 'profile_image']
-        read_only_fields = ['id', 'username', 'role', 'first_name', 'last_name', 'profile_image']
+        read_only_fields = ['id', 'role']
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+    confirm_new_password = serializers.CharField(required=True)
+
+    def validate(self, attrs):
+        if attrs['new_password'] != attrs['confirm_new_password']:
+            raise serializers.ValidationError({"new_password": "New password fields doesn't match"})
+        if len(attrs['new_password']) < 8:
+            raise serializers.ValidationError({"new_password": "Password must be at least 8 characters long."})
+        return attrs
+    
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -36,4 +50,5 @@ class UserCreateSerializer(serializers.ModelSerializer):
             password=validated_data['password']
         )
         return user
+    
 
