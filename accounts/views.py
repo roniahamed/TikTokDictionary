@@ -19,3 +19,10 @@ class UserRegister(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class UserViewSet(APIView):
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    def get(self, request, format=None):
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
