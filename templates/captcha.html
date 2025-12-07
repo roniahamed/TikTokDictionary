@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://www.google.com/recaptcha/api.js"></script>
+</head>
+<body>
+
+<div class="g-recaptcha" data-sitekey="6Lf7UyQsAAAAAKFaqZuOLi5ZTZBte31G6HrSOu4c"></div>
+<button onclick="getToken()">Get Token</button>
+
+<script>
+function getToken() {
+  const token = grecaptcha.getResponse();
+  alert(token);
+  console.log(token);
+}
+</script>
+
+</body>
+</html>
