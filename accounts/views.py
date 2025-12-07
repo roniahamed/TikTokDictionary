@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from .models import RoleChoices
 from rest_framework.decorators import action
-from tiktokdictionary.utils import verify_captcha
+from tiktokdictionary.utils import verify_recaptcha
 
 class UserRegister(APIView):
     permission_classes = [AllowAny]
@@ -17,7 +17,7 @@ class UserRegister(APIView):
         if not captcha_token:
             return Response({"captcha_token": "This field is required."}, status=status.HTTP_400_BAD_REQUEST)
         
-        valid_token = verify_captcha(captcha_token)
+        valid_token = verify_recaptcha(captcha_token)
         if not valid_token:
             return Response({"captcha_token": "Invalid captcha token."}, status=status.HTTP_400_BAD_REQUEST)
         role = request.data.pop('role', None)
