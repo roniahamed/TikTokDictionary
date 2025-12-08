@@ -28,10 +28,15 @@ class NewTrandModel(models.Model):
         verbose_name_plural = 'NewTrands'
 
 
+class ReactionChoices(models.TextChoices):
+    AGREE = 'agree', 'Agree'
+    DISAGREE = 'disagree', 'Disagree'
+
+
 class Reaction(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reactions')
     new_trand = models.ForeignKey(NewTrandModel, on_delete=models.CASCADE, related_name='reactions')
-    reaction_type = models.CharField(max_length=50)
+    reaction_type = models.CharField(max_length=50, choices=ReactionChoices.choices, default=ReactionChoices.AGREE)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
