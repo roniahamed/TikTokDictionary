@@ -1,4 +1,7 @@
 from django.db import models
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -23,4 +26,18 @@ class NewTrandModel(models.Model):
         ordering = ['-created_at', 'word']
         verbose_name = 'NewTrand'
         verbose_name_plural = 'NewTrands'
+
+
+class Reaction(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reactions')
+    new_trand = models.ForeignKey(NewTrandModel, on_delete=models.CASCADE, related_name='reactions')
+    reaction_type = models.CharField(max_length=50)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.reaction_type} on {self.new_trand.word}"
+    class Meta:
+        unique_together = ('user', 'new_trand')
+        ordering = ['-created_at']
+    
 
